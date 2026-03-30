@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llama-swap
+  namespace: ai-stack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llama-swap
+  template:
+    metadata:
+      labels:
+        app: llama-swap
+    spec:
+      containers:
+      - name: llama-swap
+        image: ghcr.io/mostlygeek/llama-swap:cuda
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+          requests:
+            nvidia.com/gpu: "1"
+        volumeMounts:
+        - name: models
+          mountPath: /data/models
+        - name: config
+          mountPath: /app/config.yaml
+          subPath: models.yml
+        env:
+        - name: CONFIG_FILE
+          value: /app/config.yaml
+      volumes:
+      - name: models
+        hostPath:
+          path: /data/models
+          type: Directory
+      - name: config
+        configMap:
+          name: llama-swap-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: llama-swap
+  namespace: ai-stack
+spec:
+  type: NodePort
+  selector:
+    app: llama-swap
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 31234
