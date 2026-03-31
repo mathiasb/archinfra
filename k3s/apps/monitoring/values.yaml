@@ -1,0 +1,52 @@
+grafana:
+  enabled: true
+  admin:
+    existingSecret: grafana-admin
+    userKey: admin-user
+    passwordKey: admin-password
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClass: local-path
+  service:
+    type: NodePort
+    nodePort: 31300
+
+prometheus:
+  prometheusSpec:
+    retention: 30d
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 20Gi
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: local-path
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 2Gi
+
+prometheus:
+  prometheusSpec:
+    additionalScrapeConfigs:
+      - job_name: llama-server
+        scrape_interval: 15s
+        static_configs:
+          - targets:
+            - llama-swap.ai-stack.svc.cluster.local:5800
+            - llama-swap.ai-stack.svc.cluster.local:5801
+            - llama-swap.ai-stack.svc.cluster.local:5802
+            - llama-swap.ai-stack.svc.cluster.local:5803
+            - llama-swap.ai-stack.svc.cluster.local:5804
+            - llama-swap.ai-stack.svc.cluster.local:5805
+        metrics_path: /metrics
+        honor_labels: true
