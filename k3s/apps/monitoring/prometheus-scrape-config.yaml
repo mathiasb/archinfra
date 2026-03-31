@@ -1,0 +1,18 @@
+- job_name: llama-server
+  scrape_interval: 15s
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+      - llama-swap.ai-stack.svc.cluster.local:5800
+      - llama-swap.ai-stack.svc.cluster.local:5801
+      - llama-swap.ai-stack.svc.cluster.local:5802
+      - llama-swap.ai-stack.svc.cluster.local:5803
+      - llama-swap.ai-stack.svc.cluster.local:5804
+      - llama-swap.ai-stack.svc.cluster.local:5805
+
+- job_name: dcgm-exporter
+  scrape_interval: 15s
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+      - dcgm-exporter.monitoring.svc.cluster.local:9400

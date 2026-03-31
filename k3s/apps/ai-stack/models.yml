@@ -1,0 +1,162 @@
+server:
+  listen: 0.0.0.0
+  port: 8080
+
+env:
+  HF_HOME: /data/models/huggingface
+  CUDA_VISIBLE_DEVICES: "0"
+  OMP_NUM_THREADS: "16"
+  GGML_NUM_THREADS: "16"
+  GGML_NO_ALLOCATOR: "1"
+  LLAMA_CACHE_CAPACITY: "16GiB"
+  LLAMA_SET_ROWS: "1"
+
+llama_defaults:
+  threads: 16
+
+models:
+  qwen3-coder-30b:
+    source: local
+    port: 5800
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/unsloth_Qwen3-Coder-30B-A3B-Instruct-GGUF_Qwen3-Coder-30B-A3B-Instruct-UD-Q4_K_XL.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --flash-attn on
+      --ctx-size 32768
+      -ngl 10
+      --batch-size 128
+      --ubatch-size 64
+      --parallel 1
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q8_0
+      --cache-type-v q5_0
+      --temp 0.2
+      --top-p 0.9
+      --top-k 64
+      --repeat-penalty 1.07
+
+  phi4-mini:
+    source: local
+    port: 5801
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/unsloth_Phi-4-mini-instruct-GGUF_Phi-4-mini-instruct.Q8_0.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --ctx-size 8192
+      -ngl 60
+      --batch-size 512
+      --ubatch-size 128
+      --parallel 1
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q8_0
+      --cache-type-v f16
+      --temp 0.2
+      --top-p 0.9
+      --top-k 64
+      --repeat-penalty 1.05
+
+  phi4-14b:
+    source: local
+    port: 5802
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/bartowski_phi-4-GGUF_phi-4-Q4_K_M.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --ctx-size 8192
+      -ngl 64
+      --batch-size 448
+      --ubatch-size 128
+      --parallel 1
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q8_0
+      --cache-type-v f16
+      --temp 0.2
+      --top-p 0.9
+      --top-k 64
+      --repeat-penalty 1.05
+
+  llama-3.2-3b:
+    source: local
+    port: 5803
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/bartowski_Llama-3.2-3B-Instruct-GGUF_Llama-3.2-3B-Instruct-Q8_0.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --ctx-size 8192
+      -ngl 60
+      --batch-size 512
+      --ubatch-size 128
+      --parallel 1
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q8_0
+      --cache-type-v f16
+      --temp 0.2
+      --top-p 0.9
+      --top-k 64
+      --repeat-penalty 1.05
+
+  deepseek-coder-v2-lite:
+    source: local
+    port: 5804
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/bartowski_DeepSeek-Coder-V2-Lite-Instruct-GGUF_DeepSeek-Coder-V2-Lite-Instruct-Q4_K_M.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --flash-attn on
+      --ctx-size 12000
+      -ngl 20
+      --batch-size 512
+      --ubatch-size 128
+      --parallel 1
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q8_0
+      --cache-type-v q5_0
+      --temp 0.2
+      --top-p 0.9
+      --top-k 64
+      --repeat-penalty 1.05
+
+  qwen35:
+    source: local
+    port: 5805
+    cmd: >
+      llama-server
+      --model "/data/models/huggingface/unsloth_Qwen3.5-9B-GGUF_Qwen3.5-9B-UD-Q4_K_XL.gguf"
+      --host 0.0.0.0
+      --port ${PORT}
+      --jinja
+      --metrics
+      --flash-attn on
+      --ctx-size 262144
+      --n-gpu-layers 99
+      --batch-size 2048
+      --ubatch-size 512
+      --kv-unified
+      --cache-reuse 256
+      --cache-type-k q4_0
+      --cache-type-v q4_0
+      --temp 0.6
+      --top-p 0.95
+      --top-k 20
+      --repeat-penalty 1.07
