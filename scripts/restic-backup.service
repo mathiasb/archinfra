@@ -1,0 +1,9 @@
+[Unit]
+Description=koala restic backup
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/bin/backup-koala.sh
+User=root
