@@ -15,3 +15,18 @@ sudo cp scripts/restic-backup.timer /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now restic-backup.timer
 ```
+
+## update-models.sh
+Rebuilds the llama-swap ConfigMap from models.yml, restarts the pod,
+and commits changes to the infra repo.
+
+### Deploy
+```bash
+sudo ln -sf /home/mathias/infra/scripts/update-models.sh /usr/local/bin/update-models
+```
+
+### Usage
+```bash
+vim /data/projects/gocrwl/llama-swap/models.yml
+update-models
+```
