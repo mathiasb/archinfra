@@ -14,7 +14,7 @@ Then install git and clone this repo:
 
 ```bash
 sudo pacman -S git
-git clone https://github.com/mathiasb/infra.git ~/infra
+git clone https://github.com/mathiasb/archinfra.git ~/infra
 cd ~/infra
 bootstrap/run-all.sh
 ```

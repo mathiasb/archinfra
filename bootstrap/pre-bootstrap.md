@@ -227,7 +227,7 @@ nvidia-smi   # must show RTX 5070
 sudo pacman -S git
 
 # Clone from GitHub (Gitea not running yet)
-git clone https://github.com/mathiasb/infra.git ~/infra
+git clone https://github.com/mathiasb/archinfra.git ~/infra
 cd ~/infra
 
 # Run bootstrap
