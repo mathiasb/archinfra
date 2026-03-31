@@ -2,6 +2,9 @@
 # NVIDIA: containerd config for k3s, CDI spec
 set -euo pipefail
 
+CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${CONFIG_DIR}/config.sh"
+
 echo "--- NVIDIA containerd config ---"
 if ! sudo grep -q "nvidia" /var/lib/rancher/k3s/agent/etc/containerd/config.toml 2>/dev/null; then
   sudo mkdir -p /var/lib/rancher/k3s/agent/etc/containerd

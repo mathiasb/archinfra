@@ -37,7 +37,7 @@ kubectl rollout status deployment/llama-swap -n ai-stack --timeout=120s
 
 echo "=== Verifying models ==="
 sleep 5
-curl -s http://10.0.1.20:31234/v1/models | python3 -m json.tool | grep '"id"'
+curl -s http://${KOALA_LAN_IP}:${LLAMA_SWAP_PORT}/v1/models | python3 -m json.tool | grep '"id"'
 
 echo "=== Committing to infra repo ==="
 cd ~/infra

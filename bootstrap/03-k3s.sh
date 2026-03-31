@@ -2,13 +2,16 @@
 # k3s: install, kubeconfig, PV redirect
 set -euo pipefail
 
+CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${CONFIG_DIR}/config.sh"
+
 echo "--- k3s install ---"
 if ! command -v k3s &>/dev/null; then
   curl -sfL https://get.k3s.io | sh -s - \
     --write-kubeconfig-mode 644 \
     --disable traefik \
     --disable servicelb \
-    --node-name koala
+    --node-name ${HOSTNAME}
 else
   echo "k3s already installed, skipping"
 fi

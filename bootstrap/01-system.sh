@@ -2,6 +2,9 @@
 # System configuration: snapper, fail2ban, UFW, SSH, reflector
 set -euo pipefail
 
+CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${CONFIG_DIR}/config.sh"
+
 INFRA_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 echo "--- Snapper ---"

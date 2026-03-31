@@ -2,6 +2,9 @@
 # Flux: install CLI, bootstrap to Gitea
 set -euo pipefail
 
+CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${CONFIG_DIR}/config.sh"
+
 echo "--- Flux CLI ---"
 if ! command -v flux &>/dev/null; then
   curl -s https://fluxcd.io/install.sh | sudo bash
@@ -20,10 +23,10 @@ echo ""
 echo "--- Bootstrap Flux to Gitea ---"
 if ! flux get sources git 2>/dev/null | grep -q "flux-system"; then
   flux bootstrap git \
-    --url=https://gitea.d-ma.be/mathias/infra \
+    --url=//infra \
     --branch=main \
     --path=k3s/flux \
-    --username=mathias \
+    --username="${GITEA_USER}" \
     --password="${GITEA_TOKEN}" \
     --token-auth=true
 else

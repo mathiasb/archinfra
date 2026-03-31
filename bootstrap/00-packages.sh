@@ -2,6 +2,9 @@
 # Install all packages
 set -euo pipefail
 
+CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${CONFIG_DIR}/config.sh"
+
 echo "--- Installing pacman packages ---"
 
 PACKAGES=(
