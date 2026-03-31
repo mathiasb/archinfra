@@ -12,12 +12,28 @@ spec:
     metadata:
       labels:
         app: llama-swap
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5800"
     spec:
       containers:
       - name: llama-swap
         image: ghcr.io/mostlygeek/llama-swap:cuda
         ports:
         - containerPort: 8080
+          name: api
+        - containerPort: 5800
+          name: model-0
+        - containerPort: 5801
+          name: model-1
+        - containerPort: 5802
+          name: model-2
+        - containerPort: 5803
+          name: model-3
+        - containerPort: 5804
+          name: model-4
+        - containerPort: 5805
+          name: model-5
         resources:
           limits:
             nvidia.com/gpu: "1"
@@ -54,3 +70,22 @@ spec:
   - port: 8080
     targetPort: 8080
     nodePort: 31234
+    name: api
+  - port: 5800
+    targetPort: 5800
+    name: model-0
+  - port: 5801
+    targetPort: 5801
+    name: model-1
+  - port: 5802
+    targetPort: 5802
+    name: model-2
+  - port: 5803
+    targetPort: 5803
+    name: model-3
+  - port: 5804
+    targetPort: 5804
+    name: model-4
+  - port: 5805
+    targetPort: 5805
+    name: model-5

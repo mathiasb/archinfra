@@ -31,6 +31,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --flash-attn on
           --ctx-size 32768
           -ngl 10
@@ -55,6 +56,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --ctx-size 8192
           -ngl 60
           --batch-size 512
@@ -78,6 +80,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --ctx-size 8192
           -ngl 64
           --batch-size 448
@@ -101,6 +104,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --ctx-size 8192
           -ngl 60
           --batch-size 512
@@ -124,6 +128,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --flash-attn on
           --ctx-size 12000
           -ngl 20
@@ -148,6 +153,7 @@ data:
           --host 0.0.0.0
           --port ${PORT}
           --jinja
+          --metrics
           --flash-attn on
           --ctx-size 262144
           --n-gpu-layers 99
