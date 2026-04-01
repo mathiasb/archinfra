@@ -18,6 +18,13 @@ spec:
         image: docker.io/fedirz/faster-whisper-server:latest-cpu
         ports:
         - containerPort: 8000
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "2000m"
+            memory: "1Gi"
         volumeMounts:
         - name: models
           mountPath: /data/models/whisper
