@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly pacman system update — runs after nightly backup
+
+[Timer]
+OnCalendar=Sun *-*-* 04:00:00
+RandomizedDelaySec=30min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
