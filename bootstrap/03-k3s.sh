@@ -5,6 +5,10 @@ set -euo pipefail
 CONFIG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${CONFIG_DIR}/config.sh"
 
+echo "--- k3s config ---"
+sudo mkdir -p /etc/rancher/k3s
+sudo cp "${INFRA_DIR}/scripts/k3s-config.yaml" /etc/rancher/k3s/config.yaml
+
 echo "--- k3s install ---"
 if ! command -v k3s &>/dev/null; then
   curl -sfL https://get.k3s.io | sh -s - \
