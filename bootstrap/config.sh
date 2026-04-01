@@ -36,3 +36,7 @@ NVIDIA_DRIVER_VERSION="595.58.03"
 # Off-site backup (Hetzner Object Storage)
 HETZNER_S3_ENDPOINT="https://hel1.your-objectstorage.com"
 HETZNER_S3_BUCKET="koala-restic-backup"
+
+# Hetzner S3 credentials are stored in /etc/restic-hetzner.env (not in this file)
+# Format: export AWS_ACCESS_KEY_ID=... / export AWS_SECRET_ACCESS_KEY=...
+# Create from 1Password entry "koala-restic" before running backup
