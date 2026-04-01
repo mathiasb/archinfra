@@ -32,3 +32,7 @@ MODELS_YML="/data/projects/gocrwl/llama-swap/models.yml"
 
 # NVIDIA
 NVIDIA_DRIVER_VERSION="595.58.03"
+
+# Off-site backup (Hetzner Object Storage)
+HETZNER_S3_ENDPOINT="https://hel1.your-objectstorage.com"
+HETZNER_S3_BUCKET="koala-restic-backup"
