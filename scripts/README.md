@@ -30,3 +30,15 @@ sudo ln -sf /home/mathias/infra/scripts/update-models.sh /usr/local/bin/update-m
 vim /data/projects/gocrwl/llama-swap/models.yml
 update-models
 ```
+
+## pacman-update.service / pacman-update.timer
+Weekly automated `pacman -Syu` every Sunday at 04:00, after the nightly backup.
+snap-pac automatically creates pre/post btrfs snapshots around each update.
+
+### Deploy
+```bash
+sudo cp scripts/pacman-update.service /etc/systemd/system/
+sudo cp scripts/pacman-update.timer /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now pacman-update.timer
+```
