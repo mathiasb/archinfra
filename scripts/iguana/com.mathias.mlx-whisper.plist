@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.mathias.mlx-whisper</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/mathias/.local/bin/mlx-openai-server</string>
+        <string>launch</string>
+        <string>--model-type</string>
+        <string>whisper</string>
+        <string>--model-path</string>
+        <string>mlx-community/whisper-large-v3-mlx</string>
+        <string>--port</string>
+        <string>8100</string>
+        <string>--host</string>
+        <string>0.0.0.0</string>
+        <string>--log-level</string>
+        <string>WARNING</string>
+    </array>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/Users/mathias/.local/bin</string>
+    </dict>
+    <key>WorkingDirectory</key>
+    <string>/Users/mathias</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/Users/mathias/Library/Logs/mlx-whisper.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mathias/Library/Logs/mlx-whisper.log</string>
+</dict>
+</plist>
