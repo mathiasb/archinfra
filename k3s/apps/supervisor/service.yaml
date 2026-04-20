@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: supervisor
+  namespace: supervisor
+spec:
+  selector:
+    app: supervisor
+  ports:
+    - port: 3200
+      targetPort: 3200
+  type: ClusterIP

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supervisor
+  namespace: supervisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supervisor
+  template:
+    metadata:
+      labels:
+        app: supervisor
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: koala
+      imagePullSecrets:
+        - name: gitea-registry
+      containers:
+        - name: supervisor
+          image: gitea.d-ma.be/mathias/supervisor:IMAGE_TAG
+          ports:
+            - containerPort: 3200
+          envFrom:
+            - secretRef:
+                name: supervisor-secrets
+          env:
+            - name: SUPERVISOR_PORT
+              value: "3200"
+            - name: LITELLM_BASE_URL
+              value: "http://iguana:4000"
+            - name: LLAMA_SWAP_URL
+              value: "http://koala:8080"
+            - name: INGEST_BASE_URL
+              value: "http://localhost:3300"
+          volumeMounts:
+            - name: brain
+              mountPath: /app/brain
+      volumes:
+        - name: brain
+          hostPath:
+            path: /var/lib/supervisor/brain
+            type: DirectoryOrCreate
