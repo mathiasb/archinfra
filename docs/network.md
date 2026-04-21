@@ -8,6 +8,7 @@
 | iguana | Services, builds | M2 Ultra Mac, LAN: 10.0.1.25 |
 | flamingo | Daily driver, edge | Mac mini |
 | piguard | Gateway, DNS, proxy, LiteLLM | Raspberry Pi 4, 1 Gbps direct to UCG Max |
+| piblock | Backup target | <!-- TODO: hardware --> |
 
 All machines are connected via **Tailscale** mesh. LAN connectivity is also available on the home network.
 
@@ -58,6 +59,10 @@ Routing table:
 | Cloud | berget.ai | `https://api.berget.ai/v1` |
 
 Environment variables (`LITELLM_MASTER_KEY`, `LITELLM_SALT_KEY`, API keys) are loaded from the piguard shell environment.
+
+## Backup
+
+koala runs `restic` on a systemd timer (see `scripts/restic-backup.service` and `scripts/restic-backup.timer`), backing up to **piblock** over SSH. The SSH key for piblock is provisioned in `bootstrap/06-backup.sh`.
 
 ## llama-swap
 

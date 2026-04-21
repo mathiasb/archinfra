@@ -93,6 +93,20 @@ SOPS_AGE_KEY_FILE=/tmp/age.key sops --decrypt secret.enc.yaml
 shred -u /tmp/age.key
 ```
 
+## Environment variables on koala
+
+API keys and config are in `/etc/environment` (loaded by PAM — available to all sessions including SSH and the Gitea runner). After a reinstall, restore these manually:
+
+| Variable | Purpose |
+|----------|---------|
+| `ANTHROPIC_API_KEY` | Claude API — used by supervisor container and claude CLI |
+| `DMABE_LLMAPI_KEY` | LiteLLM gateway key (`sk-...`) — used by supervisor and other clients |
+| `GEMINI_API_KEY` | Google Gemini |
+| `MISTRAL_API_KEY` | Mistral |
+| `BERGET_API_KEY` | berget.ai inference |
+
+Values are in 1Password.
+
 ## Gitea org secrets
 
 Set at `https://gitea.d-ma.be/org/mathias/settings/secrets` — inherited by all repos:
