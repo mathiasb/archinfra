@@ -60,8 +60,16 @@ EOF
 systemctl daemon-reload
 systemctl enable --now buildkitd
 echo "buildkitd enabled and started"
+
+# --- Directory permissions (tmpfiles.d) ---
+# /run/buildkit/ is created root-only by default; the buildkit group needs
+# execute permission on the directory to reach the socket inside it.
+cp "$(dirname "${BASH_SOURCE[0]}")/buildkitd-tmpfiles.conf" \
+  /etc/tmpfiles.d/buildkitd.conf
+systemd-tmpfiles --create /etc/tmpfiles.d/buildkitd.conf
+echo "tmpfiles.d entry installed — /run/buildkit/ will be group-accessible on boot"
 echo "Socket permissions:"
-ls -la /run/buildkit/buildkitd.sock
+ls -la /run/buildkit/
 
 # --- Registry auth ---
 # Requires REGISTRY_CREDS env var in the format "mathias:<token>"
