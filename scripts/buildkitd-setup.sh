@@ -34,6 +34,11 @@ EOF
 echo "Config written to /etc/buildkit/buildkitd.toml"
 
 # --- Systemd unit ---
+# --- Buildkit group (allows runner user to access socket without root) ---
+groupadd -f buildkit
+usermod -aG buildkit mathias
+echo "Group 'buildkit' created, mathias added"
+
 cat > /etc/systemd/system/buildkitd.service << 'EOF'
 [Unit]
 Description=BuildKit daemon
@@ -41,7 +46,7 @@ After=network.target
 
 [Service]
 Type=notify
-ExecStart=/usr/local/bin/buildkitd --config /etc/buildkit/buildkitd.toml
+ExecStart=/usr/local/bin/buildkitd --config /etc/buildkit/buildkitd.toml --group buildkit
 Restart=on-failure
 LimitNOFILE=1048576
 LimitNPROC=1048576
@@ -53,6 +58,8 @@ EOF
 systemctl daemon-reload
 systemctl enable --now buildkitd
 echo "buildkitd enabled and started"
+echo "Socket permissions:"
+ls -la /run/buildkit/buildkitd.sock
 
 # --- Registry auth ---
 # Requires REGISTRY_CREDS env var in the format "mathias:<token>"
