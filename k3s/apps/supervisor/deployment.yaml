@@ -29,9 +29,9 @@ spec:
             - name: SUPERVISOR_PORT
               value: "3200"
             - name: LITELLM_BASE_URL
-              value: "http://iguana:4000"
+              value: "http://piguard:4000"
             - name: LLAMA_SWAP_URL
-              value: "http://koala:8080"
+              value: "http://koala:31234"
             - name: INGEST_BASE_URL
               value: "http://localhost:3300"
           volumeMounts:
