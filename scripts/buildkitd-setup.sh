@@ -35,9 +35,11 @@ echo "Config written to /etc/buildkit/buildkitd.toml"
 
 # --- Systemd unit ---
 # --- Buildkit group (allows runner user to access socket without root) ---
+# mathias runs act_runner — it needs socket access without root
 groupadd -f buildkit
 usermod -aG buildkit mathias
 echo "Group 'buildkit' created, mathias added"
+echo "NOTE: restart act_runner after this script: systemctl restart act_runner"
 
 cat > /etc/systemd/system/buildkitd.service << 'EOF'
 [Unit]
