@@ -20,8 +20,8 @@ PACKAGES=(
   nvidia-open nvidia-utils nvidia-container-toolkit cuda
   # k8s tooling
   helm
-  # Container build / CD pipeline
-  buildkit skopeo age sops
+  # Container build / CD pipeline (buildkit installed separately via scripts/buildkitd-setup.sh)
+  skopeo age sops
   # Dev tools
   git go python python-pip python-pipx nodejs npm terraform
   # CLI utilities

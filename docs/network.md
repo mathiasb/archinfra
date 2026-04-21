@@ -8,7 +8,7 @@
 | iguana | Services, builds | M2 Ultra Mac, LAN: 10.0.1.25 |
 | flamingo | Daily driver, edge | Mac mini |
 | piguard | Gateway, DNS, proxy, LiteLLM | Raspberry Pi 4, 1 Gbps direct to UCG Max |
-| piblock | Backup target | <!-- TODO: hardware --> |
+| piblock | Backup target | Raspberry Pi 4, 4 TB external drive |
 
 All machines are connected via **Tailscale** mesh. LAN connectivity is also available on the home network.
 
