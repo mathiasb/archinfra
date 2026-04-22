@@ -5,3 +5,4 @@ resources:
   - deployment.yaml
   - service.yaml
   - secrets.enc.yaml
+  - supervisor-nodeport.yaml
