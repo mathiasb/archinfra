@@ -4,18 +4,15 @@ GitOps CD pipeline for services running in the koala k3s cluster.
 
 ## Architecture
 
-```
-App repo (supervisor, etc.)
-    ↓  push to main → CI passes
-Gitea Actions — cd.yml
-    ├─ buildctl (BuildKit) → build OCI image
-    ├─ skopeo → push to gitea.d-ma.be/<org>/<repo>:<git-sha>
-    └─ git clone infra repo → patch k3s/apps/<service>/deployment.yaml → push
-
-gitea.d-ma.be/mathias/infra  (this repo)
-    ↓  Flux source-controller detects new commit (30s interval)
-kustomize-controller
-    └─ applies k3s/apps/<service>/  →  pod runs new image
+```mermaid
+flowchart TD
+    A["App repo\ngit push main"] -->|triggers| B["Gitea Actions\ncd.yml"]
+    B --> C["buildctl\nbuild OCI image"]
+    C --> D["skopeo\npush image:git-sha\nto Gitea registry"]
+    D --> E["clone infra repo\npatch deployment.yaml\ngit push"]
+    E --> F["Flux source-controller\ndetects new commit\n30s interval"]
+    F --> G["kustomize-controller\napply k3s/apps/service/"]
+    G --> H["pod runs new image"]
 ```
 
 ## Components on koala

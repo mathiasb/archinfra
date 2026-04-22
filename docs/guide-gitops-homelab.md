@@ -22,43 +22,67 @@ This guide documents the exact setup running in my homelab as of early 2026, inc
 
 ## Architecture overview
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  Developer machine (flamingo / iguana)                  │
-│  git push → gitea.d-ma.be                               │
-└──────────────────────┬──────────────────────────────────┘
-                       │ HTTPS (Cloudflare → NPM → k3s ingress)
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│  piguard (Raspberry Pi 4)                               │
-│  Nginx Proxy Manager — TLS termination                  │
-│  LiteLLM — model routing gateway                        │
-└──────────────────────┬──────────────────────────────────┘
-                       │ HTTP → NodePort 30080
-                       ▼
-┌─────────────────────────────────────────────────────────┐
-│  koala (Arch Linux, RTX 5070)                           │
-│                                                         │
-│  k3s cluster                                            │
-│  ├─ ingress-nginx                                       │
-│  ├─ cert-manager (Let's Encrypt)                        │
-│  ├─ Flux CD (GitOps controller)                         │
-│  ├─ Gitea (git server + container registry)             │
-│  └─ app workloads (supervisor, etc.)                    │
-│                                                         │
-│  buildkitd (systemd, builds images)                     │
-│  act_runner (Gitea Actions runner)                      │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    Dev["Developer machine\nflamingo / iguana"]
+
+    subgraph piguard["piguard — Raspberry Pi 4"]
+        NPM["Nginx Proxy Manager\nTLS termination"]
+        LiteLLM["LiteLLM\nModel routing gateway"]
+    end
+
+    subgraph koala["koala — Arch Linux · RTX 5070"]
+        subgraph k3s["k3s cluster"]
+            Ingress["ingress-nginx"]
+            CertMgr["cert-manager\nLet's Encrypt"]
+            Flux["Flux CD\nGitOps controller"]
+            Gitea["Gitea\ngit + container registry"]
+            Apps["App workloads\nsupervisor, …"]
+        end
+        Buildkitd["buildkitd\nimage builder"]
+        Runner["act_runner\nGitea Actions runner"]
+    end
+
+    Dev -->|"git push · HTTPS"| NPM
+    NPM -->|"HTTP → NodePort 30080"| Ingress
+    Ingress --> Gitea
+    Ingress --> Apps
+    Runner -->|buildctl| Buildkitd
+    Buildkitd -->|OCI tarball| Runner
+    Runner -->|"skopeo push image:sha"| Gitea
+    Runner -->|"patch tag · git push"| Gitea
+    Flux -->|"poll every 30s"| Gitea
+    Flux -->|reconcile| Apps
+    Apps -.->|"pull image\n127.0.0.1:30300"| Gitea
 ```
 
 **The flow for a code change:**
 
-1. Developer pushes to `main` on any app repo in Gitea
-2. Gitea Actions triggers `cd.yml`
-3. The runner calls BuildKit to build an OCI image, pushes it to the Gitea container registry via skopeo
-4. The runner clones the infra repo, patches the deployment's image tag, and pushes back
-5. Flux detects the infra repo change (30 s polling interval)
-6. Flux applies the updated manifest — k3s pulls the new image and rolls the pod
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant AR as Gitea app repo
+    participant Runner as act_runner
+    participant BK as buildkitd
+    participant Reg as Gitea registry
+    participant IR as Gitea infra repo
+    participant Flux as Flux CD
+    participant K8s as k3s
+
+    Dev->>AR: git push main
+    AR->>Runner: trigger cd.yml
+    Runner->>BK: buildctl build
+    BK-->>Runner: OCI tarball
+    Runner->>Reg: skopeo copy image:sha
+    Runner->>IR: clone → patch image tag → push
+    loop Every 30s
+        Flux->>IR: poll for changes
+    end
+    IR-->>Flux: new commit detected
+    Flux->>K8s: apply updated manifest
+    K8s->>Reg: pull new image via hosts.toml
+    Note over K8s: rolling update complete
+```
 
 No manual steps. No cloud involvement. End-to-end in under two minutes.
 
