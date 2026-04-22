@@ -6,3 +6,5 @@ resources:
   - service.yaml
   - secrets.enc.yaml
   - supervisor-nodeport.yaml
+  - ingestion-deployment.yaml
+  - ingestion-service.yaml

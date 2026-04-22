@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingestion
+  namespace: supervisor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingestion
+  template:
+    metadata:
+      labels:
+        app: ingestion
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: koala
+      imagePullSecrets:
+        - name: gitea-registry
+      securityContext:
+        runAsUser: 0
+      containers:
+        - name: ingestion
+          image: gitea.d-ma.be/mathias/ingestion:latest
+          ports:
+            - containerPort: 3300
+          env:
+            - name: INGEST_PORT
+              value: "3300"
+            - name: INGEST_BRAIN_DIR
+              value: /app/brain
+          volumeMounts:
+            - name: brain
+              mountPath: /app/brain
+      volumes:
+        - name: brain
+          hostPath:
+            path: /var/lib/supervisor/brain
+            type: DirectoryOrCreate
