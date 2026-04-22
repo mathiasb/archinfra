@@ -479,6 +479,23 @@ If koala needs to be rebuilt from scratch:
 - **containerd hosts.toml**: the fix script needs to be re-run after a k3s reinstall. It's in the infra repo — one `sudo bash` command.
 - **Single node**: there's no HA. If koala is down, everything is down. For a homelab this is fine; for production workloads, add more nodes.
 - **Registry retention**: set a cleanup rule in Gitea → Admin → Packages → Cleanup Rules. Type: Container, keep last 5 versions. Without this, image tags accumulate indefinitely.
+- **Flux Gitea token expiry**: Flux authenticates to Gitea using a personal access token stored in the `flux-system` secret in the `flux-system` namespace. If this token is rotated or expires, Flux silently stops reconciling — deployments appear to work (the CD pipeline still pushes to the infra repo) but pods never update. **First thing to check when a deploy doesn't roll**: `flux get sources git`. If it shows `False` / `GitOperationFailed`, the token has gone stale. Fix:
+  ```bash
+  # 1. Generate a new token in Gitea (Settings → Applications → read:repository scope)
+  #    or via API:
+  curl -u "mathias:<password>" -X POST https://gitea.d-ma.be/api/v1/users/mathias/tokens \
+    -H "Content-Type: application/json" \
+    -d '{"name":"flux","scopes":["read:repository"]}'
+
+  # 2. Patch the secret (no sudo needed):
+  kubectl patch secret flux-system -n flux-system \
+    --type='json' \
+    -p='[{"op":"replace","path":"/data/password","value":"'$(echo -n <new-token> | base64)'"}]'
+
+  # 3. Force immediate reconciliation:
+  flux reconcile source git flux-system
+  flux reconcile kustomization apps
+  ```
 
 ---
 
