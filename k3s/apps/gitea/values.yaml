@@ -6,6 +6,11 @@ gitea:
     server:
       DOMAIN: gitea.d-ma.be
       ROOT_URL: https://gitea.d-ma.be
+      # Trust localhost + RFC1918 pod/service networks for proxy headers.
+      # Required so ingress-nginx can set X-Forwarded-Proto: https → Gitea
+      # generates https:// realm URLs for container registry token exchange.
+      # NOTE: applied to the gitea-inline-config secret directly (Gitea not Flux-managed).
+      REVERSE_PROXY_TRUSTED_PROXIES: "127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12"
     database:
       DB_TYPE: postgres
 
