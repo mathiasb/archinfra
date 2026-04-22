@@ -19,7 +19,7 @@ spec:
         - name: gitea-registry
       containers:
         - name: supervisor
-          image: gitea.d-ma.be/mathias/supervisor:0e08dfffb830ffdbb4185bcec1b8176cd27f2781
+          image: gitea.d-ma.be/mathias/supervisor:214f6070072d8216d3a8757262e179ed0caab9fe
           ports:
             - containerPort: 3200
           envFrom:

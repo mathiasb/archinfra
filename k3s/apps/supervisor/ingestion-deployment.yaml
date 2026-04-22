@@ -21,7 +21,7 @@ spec:
         runAsUser: 0
       containers:
         - name: ingestion
-          image: gitea.d-ma.be/mathias/ingestion:0e08dfffb830ffdbb4185bcec1b8176cd27f2781
+          image: gitea.d-ma.be/mathias/ingestion:214f6070072d8216d3a8757262e179ed0caab9fe
           ports:
             - containerPort: 3300
           env:
