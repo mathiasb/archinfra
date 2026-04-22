@@ -1,6 +1,7 @@
 #!/bin/bash
 # Fix ImagePullBackOff for gitea.d-ma.be on koala.
 # containerd v2.x ignores registries.yaml mirrors — use hosts.toml instead.
+# Mirror target: http://127.0.0.1:30300 (gitea-http-nodeport, bypasses ingress)
 # Run as root: sudo bash scripts/fix-containerd-registry.sh
 set -euo pipefail
 
@@ -10,7 +11,6 @@ echo "=== Step 1: find config_path ==="
 CERT_DIR=$(grep -oP 'config_path\s*=\s*"\K[^"]+' "${CONFIG_TOML}")
 if [[ -z "${CERT_DIR}" ]]; then
   echo "ERROR: config_path not found in ${CONFIG_TOML}"
-  echo "Contents:"
   cat "${CONFIG_TOML}"
   exit 1
 fi
@@ -22,10 +22,9 @@ mkdir -p "${CERT_DIR}/gitea.d-ma.be"
 cat > "${CERT_DIR}/gitea.d-ma.be/hosts.toml" << 'EOF'
 server = "https://gitea.d-ma.be"
 
-[host."https://10.0.1.20:30443"]
+[host."http://127.0.0.1:30300"]
   capabilities = ["pull", "resolve"]
-  skip_verify = true
-  [host."https://10.0.1.20:30443".header]
+  [host."http://127.0.0.1:30300".header]
     Authorization = ["Basic bWF0aGlhczo3MzZhOGMzNmFkY2M2ZWNiNDFmZmY1NmU1YWU0ZDBlYjMxMDVhNjcw"]
 EOF
 echo "Written: ${CERT_DIR}/gitea.d-ma.be/hosts.toml"
