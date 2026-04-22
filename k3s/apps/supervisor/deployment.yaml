@@ -30,10 +30,13 @@ spec:
               value: "3200"
             - name: LITELLM_BASE_URL
               value: "http://piguard:4000"
-            - name: LLAMA_SWAP_URL
-              value: "http://koala:31234"
             - name: INGEST_BASE_URL
               value: "http://localhost:3300"
+            - name: LITELLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supervisor-secrets
+                  key: DMABE_LLMAPI_KEY
           volumeMounts:
             - name: brain
               mountPath: /app/brain
