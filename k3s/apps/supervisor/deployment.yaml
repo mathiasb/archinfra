@@ -32,6 +32,8 @@ spec:
               value: "http://piguard:4000"
             - name: INGEST_BASE_URL
               value: "http://ingestion:3300"
+            - name: INGEST_SVC_URL
+              value: "http://ingestion:3300"
             - name: LITELLM_API_KEY
               valueFrom:
                 secretKeyRef:

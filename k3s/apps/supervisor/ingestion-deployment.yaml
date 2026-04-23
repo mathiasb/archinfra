@@ -29,6 +29,15 @@ spec:
               value: "3300"
             - name: INGEST_BRAIN_DIR
               value: /app/brain
+            - name: INGEST_LLM_URL
+              value: "http://piguard:4000/v1"
+            - name: INGEST_LLM_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: supervisor-secrets
+                  key: DMABE_LLMAPI_KEY
+            - name: INGEST_WATCH_INTERVAL
+              value: "30"
           volumeMounts:
             - name: brain
               mountPath: /app/brain
