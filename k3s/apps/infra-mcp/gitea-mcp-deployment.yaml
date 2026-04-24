@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea-mcp
+  namespace: infra-mcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea-mcp
+  template:
+    metadata:
+      labels:
+        app: gitea-mcp
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: koala
+      containers:
+        - name: gitea-mcp
+          image: gitea/gitea-mcp-server:nightly
+          args: ["-t", "http", "--port", "3401"]
+          ports:
+            - containerPort: 3401
+          env:
+            - name: GITEA_HOST
+              value: "https://gitea.d-ma.be"
+            - name: GITEA_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: infra-mcp-secrets
+                  key: GITEA_ACCESS_TOKEN
+          livenessProbe:
+            tcpSocket:
+              port: 3401
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "10m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"
