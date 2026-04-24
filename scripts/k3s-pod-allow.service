@@ -1,0 +1,12 @@
+[Unit]
+Description=Allow k3s pod CIDR in iptables-legacy INPUT
+After=k3s.service
+Requires=k3s.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/k3s-pod-allow.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
