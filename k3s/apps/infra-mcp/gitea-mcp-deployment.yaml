@@ -18,6 +18,7 @@ spec:
       containers:
         - name: gitea-mcp
           image: gitea/gitea-mcp-server:nightly
+          command: ["/app/gitea-mcp"]
           args: ["-t", "http", "--port", "3401"]
           ports:
             - containerPort: 3401
