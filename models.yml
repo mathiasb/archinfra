@@ -178,7 +178,7 @@ slots:
 
   iguana/quality-coder:
     model: "qwen3-coder-next"
-    litellm_name: "qwen3-coder-next"
+    litellm_name: "iguana/qwen3-coder-next"
     use_case: "Agentic coding (quality, complex tasks)"
     params:
       num_ctx: 65536
@@ -187,7 +187,7 @@ slots:
 
   iguana/general:
     model: "qwen3.5:35b"
-    litellm_name: "qwen3.5-35b"
+    litellm_name: "iguana/qwen35-35b"
     use_case: "Chat / general assistant (OpenWebUI)"
     params:
       num_ctx: 32768
@@ -196,7 +196,8 @@ slots:
 
   iguana/reasoning:
     model: "deepseek-r1-tuned"
-    litellm_name: "deepseek-r1-tuned"
+    litellm_name: "iguana/deepseek-r1-14b"
+    litellm_skip: true  # routes managed in extras.yaml (think/no-think variants)
     use_case: "Reasoning / planning"
     params:
       num_ctx: 16384
@@ -205,13 +206,13 @@ slots:
 
   iguana/embed:
     model: "nomic-embed-text"
-    litellm_name: "nomic-embed"
+    litellm_name: "iguana/nomic-embed"
     type: embedding
     use_case: "Embeddings (RAG)"
 
   iguana/rerank:
     model: "Qwen3-Reranker-0.6B"
-    litellm_name: "iguana/rerank"
+    litellm_name: "iguana/qwen3-reranker"
     type: reranker
     use_case: "Search result reranking"
 

@@ -1,5 +1,9 @@
 general_settings:
   master_key: "os.environ/LITELLM_MASTER_KEY"
+  salt_key: "os.environ/LITELLM_SALT_KEY"
+
+litellm_settings:
+  drop_params: true
 
 model_list:
   - model_name: "koala/qwen3-coder-30b"
@@ -26,19 +30,74 @@ model_list:
     litellm_params:
       model: "openai/qwen35-9b-fast"
       api_base: "http://10.0.1.20:31234/v1"
-  - model_name: "qwen3-coder-next"
+  - model_name: "iguana/qwen3-coder-next"
     litellm_params:
       model: "ollama_chat/qwen3-coder-next"
       api_base: "http://10.0.1.25:11434"
-  - model_name: "qwen3.5-35b"
+  - model_name: "iguana/qwen35-35b"
     litellm_params:
       model: "ollama_chat/qwen3.5:35b"
       api_base: "http://10.0.1.25:11434"
-  - model_name: "deepseek-r1-tuned"
-    litellm_params:
-      model: "ollama_chat/deepseek-r1-tuned"
-      api_base: "http://10.0.1.25:11434"
-  - model_name: "nomic-embed"
+  - model_name: "iguana/nomic-embed"
     litellm_params:
       model: "ollama/nomic-embed-text"
+      api_base: "http://10.0.1.25:11434"
+  - model_name: "berget/gpt-oss-120b"
+    litellm_params:
+      model: "openai/gpt-oss-120b"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+  - model_name: "berget/mistral-small"
+    litellm_params:
+      model: "mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+      custom_llm_provider: "mistral"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+  - model_name: "berget/llama-3.3-70b"
+    litellm_params:
+      model: "openai/meta-llama/Llama-3.3-70B-Instruct"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+  - model_name: "berget/whisper-large-v3"
+    litellm_params:
+      model: "openai/whisper-large-v3"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+  - model_name: "iguana/devstral"
+    litellm_params:
+      model: "ollama/devstral-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+  - model_name: "iguana/qwen3-coder-30b"
+    litellm_params:
+      model: "ollama/qwen3-coder-30b-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+  - model_name: "iguana/gpt-oss-20b"
+    litellm_params:
+      model: "ollama/gpt-oss:20b"
+      api_base: "http://10.0.1.25:11434"
+  - model_name: "iguana/gemma4-26b"
+    litellm_params:
+      model: "openai/gemma4:26b"
+      api_base: "http://10.0.1.25:11434"
+      api_key: "none"
+  
+  - model_name: "iguana/deepseek-r1-14b"
+    litellm_params:
+      model: "ollama/deepseek-r1-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+      extra_body:
+        think: false
+  - model_name: "iguana/deepseek-r1-14b-think"
+    litellm_params:
+      model: "ollama/deepseek-r1-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+  - model_name: "iguana/qwen3-14b"
+    litellm_params:
+      model: "ollama/qwen3-14b-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+      extra_body:
+        think: false
+  - model_name: "iguana/qwen3-14b-think"
+    litellm_params:
+      model: "ollama/qwen3-14b-tuned:latest"
       api_base: "http://10.0.1.25:11434"

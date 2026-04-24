@@ -1,19 +1,100 @@
 # litellm/extras.yaml — manually maintained LiteLLM settings
 # Merged with generated model routes to produce litellm/config.yaml
-# Edit this for: cloud providers, general settings, rate limits
 #
-# Populate with real values from piguard after running:
-#   ssh mathias@piguard "cat ~/litellm-infra/config.yaml"
+# Generated routes come from models.yml slots. This file holds:
+#   - LiteLLM settings (general_settings, litellm_settings)
+#   - Cloud provider routes (berget.ai, etc.)
+#   - Extra iguana models not assigned to a slot (candidates for evaluation)
+#   - Think/no-think routing variants for reasoning models
 
 general_settings:
   master_key: "os.environ/LITELLM_MASTER_KEY"
+  salt_key: "os.environ/LITELLM_SALT_KEY"
 
-# Cloud and external model routes (not managed by model slots)
-# These get appended to the generated model_list in config.yaml
-extra_models: []
-  # Example:
-  # - model_name: "berget/llama-70b"
-  #   litellm_params:
-  #     model: "openai/meta-llama/Llama-3.3-70B-Instruct"
-  #     api_base: "https://api.berget.ai/v1"
-  #     api_key: "os.environ/BERGET_API_KEY"
+litellm_settings:
+  drop_params: true
+
+extra_models:
+
+  # ── berget.ai (external, metered fallback) ──────────────────
+
+  - model_name: "berget/gpt-oss-120b"
+    litellm_params:
+      model: "openai/gpt-oss-120b"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+
+  - model_name: "berget/mistral-small"
+    litellm_params:
+      model: "mistralai/Mistral-Small-3.2-24B-Instruct-2506"
+      custom_llm_provider: "mistral"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+
+  - model_name: "berget/llama-3.3-70b"
+    litellm_params:
+      model: "openai/meta-llama/Llama-3.3-70B-Instruct"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+
+  - model_name: "berget/whisper-large-v3"
+    litellm_params:
+      model: "openai/whisper-large-v3"
+      api_base: "https://api.berget.ai/v1"
+      api_key: "os.environ/BERGET_API_KEY"
+
+  # ── iguana extras (not slot holders — evaluation candidates) ─
+
+  - model_name: "iguana/devstral"
+    litellm_params:
+      model: "ollama/devstral-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+
+  - model_name: "iguana/qwen3-coder-30b"
+    litellm_params:
+      model: "ollama/qwen3-coder-30b-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+
+  - model_name: "iguana/gpt-oss-20b"
+    litellm_params:
+      model: "ollama/gpt-oss:20b"
+      api_base: "http://10.0.1.25:11434"
+
+  - model_name: "iguana/gemma4-26b"
+    litellm_params:
+      model: "openai/gemma4:26b"
+      api_base: "http://10.0.1.25:11434"
+      api_key: "none"
+
+  # ── think/no-think routing variants ─────────────────────────
+  # Some reasoning models support a "think" parameter via Ollama.
+  # The base route (generated from slots) uses the default behavior.
+  # These variants provide explicit control:
+  #   - *-think: enables chain-of-thought (no extra_body override)
+  #   - base name with think:false: suppresses chain-of-thought
+
+  # deepseek-r1: slot generates "deepseek-r1-tuned" (default behavior)
+  - model_name: "iguana/deepseek-r1-14b"
+    litellm_params:
+      model: "ollama/deepseek-r1-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+      extra_body:
+        think: false
+
+  - model_name: "iguana/deepseek-r1-14b-think"
+    litellm_params:
+      model: "ollama/deepseek-r1-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+
+  # qwen3-14b: not a slot holder, but useful for reasoning
+  - model_name: "iguana/qwen3-14b"
+    litellm_params:
+      model: "ollama/qwen3-14b-tuned:latest"
+      api_base: "http://10.0.1.25:11434"
+      extra_body:
+        think: false
+
+  - model_name: "iguana/qwen3-14b-think"
+    litellm_params:
+      model: "ollama/qwen3-14b-tuned:latest"
+      api_base: "http://10.0.1.25:11434"

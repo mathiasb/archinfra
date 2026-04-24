@@ -226,16 +226,25 @@ iguana_port="$(yq '.hardware.iguana.ollama_port' "$MODELS_YML")"
 
 {
   # General settings from extras.yaml
-  yq '.general_settings' "$LITELLM_EXTRAS" | sed 's/^//' | {
-    echo "general_settings:"
-    while IFS= read -r line; do
-      # Skip the first line if it's "general_settings:" or empty mapping
+  echo "general_settings:"
+  yq '.general_settings' "$LITELLM_EXTRAS" | while IFS= read -r line; do
+    [[ "$line" == "---" ]] && continue
+    [[ -z "$line" ]] && continue
+    echo "  $line"
+  done
+  echo ""
+
+  # LiteLLM settings from extras.yaml (if present)
+  litellm_settings="$(yq '.litellm_settings // null' "$LITELLM_EXTRAS")"
+  if [[ "$litellm_settings" != "null" ]]; then
+    echo "litellm_settings:"
+    yq '.litellm_settings' "$LITELLM_EXTRAS" | while IFS= read -r line; do
       [[ "$line" == "---" ]] && continue
       [[ -z "$line" ]] && continue
       echo "  $line"
     done
-  }
-  echo ""
+    echo ""
+  fi
 
   echo "model_list:"
 
@@ -256,9 +265,11 @@ iguana_port="$(yq '.hardware.iguana.ollama_port' "$MODELS_YML")"
     slot_type="$(yq ".slots[\"$slot_key\"].type // \"chat\"" "$MODELS_YML")"
     model_name="$(yq ".slots[\"$slot_key\"].model" "$MODELS_YML")"
 
-    # Skip reranker and stt — not routed through LiteLLM
+    # Skip types not routed through LiteLLM, or slots managed in extras.yaml
     [[ "$slot_type" == "reranker" ]] && continue
     [[ "$slot_type" == "stt" ]] && continue
+    skip="$(yq ".slots[\"$slot_key\"].litellm_skip // false" "$MODELS_YML")"
+    [[ "$skip" == "true" ]] && continue
 
     local_provider="ollama_chat"
     [[ "$slot_type" == "embedding" ]] && local_provider="ollama"
@@ -273,7 +284,8 @@ iguana_port="$(yq '.hardware.iguana.ollama_port' "$MODELS_YML")"
   extra_count="$(yq '.extra_models | length' "$LITELLM_EXTRAS")"
   if [[ "$extra_count" -gt 0 ]]; then
     # Output each extra model as a properly indented YAML list item
-    yq '.extra_models' "$LITELLM_EXTRAS" | sed 's/^/  /'
+    # Strip comments (yq preserves them) for clean generated output
+    yq '.extra_models' "$LITELLM_EXTRAS" | grep -v '^#' | sed 's/^/  /'
   fi
 } > "$LITELLM_CONFIG"
 

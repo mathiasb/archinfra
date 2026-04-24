@@ -25,11 +25,11 @@
 
 | Slot | Model | LiteLLM Name | Type | Use Case |
 |------|-------|-------------|------|----------|
-| quality-coder | qwen3-coder-next | `qwen3-coder-next` | chat | Agentic coding (quality, complex tasks) |
-| general | qwen3.5:35b | `qwen3.5-35b` | chat | Chat / general assistant (OpenWebUI) |
-| reasoning | deepseek-r1-tuned | `deepseek-r1-tuned` | chat | Reasoning / planning |
-| embed | nomic-embed-text | `nomic-embed` | embedding | Embeddings (RAG) |
-| rerank | Qwen3-Reranker-0.6B | `iguana/rerank` | reranker | Search result reranking |
+| quality-coder | qwen3-coder-next | `iguana/qwen3-coder-next` | chat | Agentic coding (quality, complex tasks) |
+| general | qwen3.5:35b | `iguana/qwen35-35b` | chat | Chat / general assistant (OpenWebUI) |
+| reasoning | deepseek-r1-tuned | `iguana/deepseek-r1-14b` | chat | Reasoning / planning |
+| embed | nomic-embed-text | `iguana/nomic-embed` | embedding | Embeddings (RAG) |
+| rerank | Qwen3-Reranker-0.6B | `iguana/qwen3-reranker` | reranker | Search result reranking |
 | stt | mlx-community/whisper-large-v3-mlx | `iguana/whisper` | stt | Speech to text |
 
 ## Management Commands
