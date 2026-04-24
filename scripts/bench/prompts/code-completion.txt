@@ -1,0 +1,1 @@
+Write a Go function that takes a slice of integers and returns the top K elements in descending order. Use a min-heap for O(n log k) complexity. Include the heap implementation — do not use container/heap.

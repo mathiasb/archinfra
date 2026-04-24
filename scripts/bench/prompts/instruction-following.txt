@@ -1,0 +1,1 @@
+Explain the difference between a mutex and a semaphore. Give one concrete example where each is the better choice. Keep your answer under 200 words.
