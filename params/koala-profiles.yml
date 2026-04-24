@@ -1,0 +1,47 @@
+# Known-good parameter profiles for koala (RTX 5070, 12GB VRAM, 64GB RAM)
+# Use as starting points when adding models to models.yml.
+# After benchmarking, update models.yml with tuned values.
+
+profiles:
+  gpu-resident-small:
+    description: "Models <=6GB, fully GPU-resident"
+    fits: "Q4 quants up to ~9B dense, Q8 up to ~3B"
+    example_models:
+      - "Qwen3.5-9B UD-Q4_K_XL (~5.6GB)"
+      - "Phi-4-mini Q8_0 (~4GB)"
+    params:
+      ngl: 99
+      batch_size: 2048
+      ubatch_size: 512
+      cache_type_k: q4_0
+      cache_type_v: q4_0
+      flash_attn: true
+    notes: "Can push ctx_size high (128k+). Best throughput."
+
+  gpu-resident-medium:
+    description: "Models 6-10GB, fits in VRAM with careful params"
+    fits: "Q4 quants 9-14B dense"
+    example_models:
+      - "Phi-4 14B Q4_K_M (~9GB)"
+    params:
+      ngl: 60-64
+      batch_size: 448-512
+      ubatch_size: 128
+      cache_type_k: q8_0
+      cache_type_v: f16
+    notes: "ctx_size 8k-16k safe. 32k possible with q4_0 KV cache. Watch VRAM during generation."
+
+  partial-offload:
+    description: "Models >10GB, partial GPU offload to system RAM"
+    fits: "MoE models (e.g. Qwen3-Coder-30B-A3B), large dense Q4"
+    example_models:
+      - "Qwen3-Coder-30B-A3B UD-Q4_K_XL (~19GB, 10 layers on GPU)"
+      - "DeepSeek-Coder-V2-Lite Q4_K_M (~9GB model, MoE needs headroom)"
+    params:
+      ngl: 10-20
+      batch_size: 128
+      ubatch_size: 64
+      cache_type_k: q8_0
+      cache_type_v: q5_0
+      flash_attn: true
+    notes: "Slower but worthwhile for quality. ctx_size 16-32k max. More GPU layers = faster but check VRAM with nvidia-smi during load."
