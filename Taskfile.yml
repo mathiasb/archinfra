@@ -1,0 +1,63 @@
+version: '3'
+
+vars:
+  SCRIPTS_DIR: ./scripts
+
+tasks:
+  model:generate:
+    desc: Regenerate all configs from models.yml (no deployment)
+    cmds:
+      - "{{.SCRIPTS_DIR}}/model-generate.sh"
+
+  model:status:
+    desc: Compare models.yml vs live state on all machines
+    cmds:
+      - "{{.SCRIPTS_DIR}}/model-status.sh"
+
+  model:plan:
+    desc: "Dry-run: show what model:apply would do"
+    cmds:
+      - "{{.SCRIPTS_DIR}}/model-plan.sh"
+
+  model:apply:
+    desc: Execute provisioning plan with approval gates
+    cmds:
+      - "{{.SCRIPTS_DIR}}/model-apply.sh"
+
+  model:eval:
+    desc: "Benchmark a model slot (usage: task model:eval -- koala/fast-coder)"
+    cmds:
+      - "{{.SCRIPTS_DIR}}/bench/run-bench.sh {{.CLI_ARGS}}"
+
+  model:remove:
+    desc: "Remove a model from a machine (usage: task model:remove -- iguana/model-name)"
+    cmds:
+      - |
+        SLOT="{{.CLI_ARGS}}"
+        MACHINE="${SLOT%%/*}"
+        MODEL="${SLOT#*/}"
+        if [ -z "$MODEL" ] || [ "$MODEL" = "$SLOT" ]; then
+          echo "Usage: task model:remove -- <machine>/<model>"
+          echo "  e.g.: task model:remove -- iguana/glm-4.7-flash"
+          exit 1
+        fi
+        echo ""
+        read -p "⚠️  Remove ${MODEL} from ${MACHINE}? [y/N] " -r
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+          echo "Cancelled."
+          exit 0
+        fi
+        case "$MACHINE" in
+          iguana)
+            ssh mathias@iguana "ollama rm '${MODEL}'"
+            ;;
+          koala)
+            echo "koala model removal: delete the GGUF file manually from /data/models/huggingface/"
+            echo "  ssh mathias@koala 'ls /data/models/huggingface/*${MODEL}*'"
+            ;;
+          *)
+            echo "Unknown machine: ${MACHINE}"
+            exit 1
+            ;;
+        esac
+        echo "Done. Update models.yml if this was a slot holder, then run: task model:generate"
