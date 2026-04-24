@@ -45,6 +45,8 @@ if ! sudo ufw status | grep -q "Status: active"; then
   sudo ufw allow 443/tcp comment 'HTTPS - public services via piguard/NPM'
   sudo ufw allow in on tailscale0 to any port 6443 comment 'k3s API - Tailscale mesh only'
   sudo ufw allow in on tailscale0 comment 'All traffic within Tailscale mesh'
+  sudo ufw allow from 10.42.0.0/16 comment 'k3s pod CIDR'
+  sudo ufw allow from 10.43.0.0/16 comment 'k3s service CIDR'
   sudo ufw --force enable
 else
   echo "UFW already active, skipping"
