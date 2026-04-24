@@ -44,19 +44,13 @@ For now, HTTPS cloning works from all machines: `https://gitea.d-ma.be/mathias/<
 
 ## LiteLLM
 
-LiteLLM runs on **piguard** via Docker Compose at `~/litellm-infra/`.
+LiteLLM runs on **piguard** via Docker Compose.
 
-- **Config**: `~/litellm-infra/config.yaml`
-- **Port**: 4000 (accessed as `http://piguard:4000` or `http://10.0.1.x:4000`)
-- **API key**: `DMABE_LLMAPI_KEY` (used by supervisor and other clients)
-
-Routing table:
-
-| Model group | Backend | Endpoint |
-|-------------|---------|----------|
-| Local (iguana) | Ollama | `http://10.0.1.25:11434` |
-| Local (koala) | llama-swap | `http://10.0.1.20:31234` |
-| Cloud | berget.ai | `https://api.berget.ai/v1` |
+- **Config source of truth**: `litellm/config.yaml` in this repo (generated from `models.yml`)
+- **Deploy**: `litellm/deploy.sh` (scp + restart) or `task model:apply`
+- **Port**: 4000 (accessed as `http://piguard:4000`)
+- **API key**: `DMABE_LLMAPI_KEY`
+- **Management**: `task model:generate` regenerates config, `task model:apply` deploys it
 
 Environment variables (`LITELLM_MASTER_KEY`, `LITELLM_SALT_KEY`, API keys) are loaded from the piguard shell environment.
 
@@ -68,6 +62,7 @@ koala runs `restic` on a systemd timer (see `scripts/restic-backup.service` and 
 
 llama-swap runs on **koala** at port **31234**, managing GPU model loading/unloading.
 
-- **Config**: `/data/projects/gocrwl/llama-swap/models.yml` (source of truth)
-- **Update procedure**: run `scripts/update-models.sh` from the infra repo on koala — rebuilds the k3s ConfigMap, restarts the pod, and commits to git
+- **Config source of truth**: `models.yml` in repo root (koala slots)
 - **ConfigMap**: `k3s/apps/ai-stack/llama-swap-configmap.yaml` (generated, do not edit directly)
+- **Management**: `task model:apply` regenerates ConfigMap, restarts pod, and commits
+- **Status**: `task model:status` shows live vs declared state

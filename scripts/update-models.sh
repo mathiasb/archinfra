@@ -1,6 +1,12 @@
 #!/bin/bash
-# Usage: update-models.sh
-# Rebuilds llama-swap configmap from models.yml and triggers a rolling restart
+# DEPRECATED: Use 'task model:apply' instead. See Taskfile.yml and models.yml.
+# This script will be removed in a future cleanup.
+echo "DEPRECATED: Use 'task model:apply' instead. See Taskfile.yml."
+echo "The new workflow uses models.yml as the single source of truth."
+echo "Run 'task model:plan' to see what changes are needed."
+exit 1
+
+# Original script below (kept for reference):
 set -euo pipefail
 
 MODELS_YML=/data/projects/gocrwl/llama-swap/models.yml
