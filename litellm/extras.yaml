@@ -1,0 +1,19 @@
+# litellm/extras.yaml — manually maintained LiteLLM settings
+# Merged with generated model routes to produce litellm/config.yaml
+# Edit this for: cloud providers, general settings, rate limits
+#
+# Populate with real values from piguard after running:
+#   ssh mathias@piguard "cat ~/litellm-infra/config.yaml"
+
+general_settings:
+  master_key: "os.environ/LITELLM_MASTER_KEY"
+
+# Cloud and external model routes (not managed by model slots)
+# These get appended to the generated model_list in config.yaml
+extra_models: []
+  # Example:
+  # - model_name: "berget/llama-70b"
+  #   litellm_params:
+  #     model: "openai/meta-llama/Llama-3.3-70B-Instruct"
+  #     api_base: "https://api.berget.ai/v1"
+  #     api_key: "os.environ/BERGET_API_KEY"
