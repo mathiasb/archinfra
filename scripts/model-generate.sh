@@ -346,16 +346,15 @@ echo "==> Generating MODELS.md"
   echo "## Management Commands"
   echo ""
   echo '```bash'
-  echo '# Regenerate all configs from models.yml'
-  echo 'scripts/model-generate.sh'
-  echo ''
-  echo '# Apply llama-swap config to k3s'
-  echo 'kubectl apply -f k3s/apps/ai-stack/llama-swap-configmap.yaml'
-  echo 'kubectl rollout restart deployment/llama-swap -n ai-stack'
-  echo ''
-  echo '# Validate a slot is responding'
-  echo 'curl http://10.0.1.20:31234/v1/models'
+  echo 'task model:status     # compare models.yml vs live state'
+  echo 'task model:plan       # dry-run: show what would change'
+  echo 'task model:apply      # execute changes (with approval gates)'
+  echo 'task model:eval       # benchmark a model against slot targets'
+  echo 'task model:generate   # regenerate configs without deploying'
+  echo 'task model:remove     # remove a model (with confirmation)'
   echo '```'
+  echo ""
+  echo "See \`params/koala-profiles.yml\` for VRAM parameter guidance."
 } > "$MODELS_MD"
 
 echo "    Written: $MODELS_MD"

@@ -35,13 +35,12 @@
 ## Management Commands
 
 ```bash
-# Regenerate all configs from models.yml
-scripts/model-generate.sh
-
-# Apply llama-swap config to k3s
-kubectl apply -f k3s/apps/ai-stack/llama-swap-configmap.yaml
-kubectl rollout restart deployment/llama-swap -n ai-stack
-
-# Validate a slot is responding
-curl http://10.0.1.20:31234/v1/models
+task model:status     # compare models.yml vs live state
+task model:plan       # dry-run: show what would change
+task model:apply      # execute changes (with approval gates)
+task model:eval       # benchmark a model against slot targets
+task model:generate   # regenerate configs without deploying
+task model:remove     # remove a model (with confirmation)
 ```
+
+See `params/koala-profiles.yml` for VRAM parameter guidance.
