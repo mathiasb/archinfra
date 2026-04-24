@@ -8,7 +8,7 @@ data:
     server:
       listen: 0.0.0.0
       port: 8080
-    
+
     env:
       HF_HOME: /data/models/huggingface
       CUDA_VISIBLE_DEVICES: "0"
@@ -17,10 +17,10 @@ data:
       GGML_NO_ALLOCATOR: "1"
       LLAMA_CACHE_CAPACITY: "16GiB"
       LLAMA_SET_ROWS: "1"
-    
+
     llama_defaults:
       threads: 16
-    
+
     models:
       qwen3-coder-30b:
         source: local
@@ -46,7 +46,7 @@ data:
           --top-p 0.9
           --top-k 64
           --repeat-penalty 1.07
-    
+
       phi4-mini:
         source: local
         port: 5801
@@ -70,7 +70,7 @@ data:
           --top-p 0.9
           --top-k 64
           --repeat-penalty 1.05
-    
+
       phi4-14b:
         source: local
         port: 5802
@@ -94,7 +94,7 @@ data:
           --top-p 0.9
           --top-k 64
           --repeat-penalty 1.05
-    
+
       llama-3.2-3b:
         source: local
         port: 5803
@@ -118,7 +118,7 @@ data:
           --top-p 0.9
           --top-k 64
           --repeat-penalty 1.05
-    
+
       deepseek-coder-v2-lite:
         source: local
         port: 5804
@@ -143,8 +143,8 @@ data:
           --top-p 0.9
           --top-k 64
           --repeat-penalty 1.05
-    
-      qwen35:
+
+      qwen35-9b-fast:
         source: local
         port: 5805
         cmd: >
@@ -167,3 +167,4 @@ data:
           --top-p 0.95
           --top-k 20
           --repeat-penalty 1.07
+
