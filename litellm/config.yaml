@@ -80,6 +80,15 @@ model_list:
       model: "openai/gemma4:26b"
       api_base: "http://10.0.1.25:11434"
       api_key: "none"
+  - model_name: "iguana/gemma4-31b"
+    litellm_params:
+      model: "openai/gemma4:31b"
+      api_base: "http://10.0.1.25:11434/v1"
+      api_key: "none"
+  - model_name: "iguana/glm-4.7-flash"
+    litellm_params:
+      model: "ollama/glm-4.7-flash:q8_0"
+      api_base: "http://10.0.1.25:11434"
   
   - model_name: "iguana/deepseek-r1-14b"
     litellm_params:
