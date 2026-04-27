@@ -37,7 +37,18 @@ homelab offline. Read this file before suggesting host-level changes.
 - **Mesh**: Tailscale on all hosts (table 52)
 - **Firewall**: UCG Max (perimeter) + Tailscale ACLs (mesh). No host firewall.
 - **Build/deploy pipeline**: `docs/cd-pipeline.md`
+- **Container registries**: `docs/registries.md` (Gitea + local `:5000`)
 - **Network topology**: `docs/network.md`
+
+## Active app repos with their own CI/CD
+
+These app repos build and deploy themselves via Gitea Actions; this infra
+repo provides the Kustomization-managed manifests they target.
+
+- **`gitea.d-ma.be/mathias/cobalt-dingo`** — Go HTTP service for Fortnox
+  AP automation. Builds with buildah, pushes to local `:5000` registry,
+  CI patches `k3s/apps/cobalt-dingo/deployment.yaml` and triggers Flux.
+  Pinned to koala via `nodeSelector` (registry coupling). Active development.
 
 ## When in doubt
 

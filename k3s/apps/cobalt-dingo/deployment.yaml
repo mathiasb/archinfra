@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cobalt-dingo
+  namespace: cobalt-dingo
+  labels:
+    app: cobalt-dingo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cobalt-dingo
+  template:
+    metadata:
+      labels:
+        app: cobalt-dingo
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: koala
+      containers:
+        - name: cobalt-dingo
+          # Image tag is updated by cobalt-dingo's Gitea Actions CI on every
+          # main-branch push (see docs/cd-pipeline.md). Pinning to a specific
+          # sha here means the manifest is the source of truth for what's live.
+          image: localhost:5000/cobalt-dingo:e020977
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10

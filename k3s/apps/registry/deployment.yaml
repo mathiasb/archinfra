@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: registry
+  namespace: registry
+  labels:
+    app: registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: registry
+  template:
+    metadata:
+      labels:
+        app: registry
+    spec:
+      # Single-node cluster today — scheduler implicitly places this on koala.
+      # If/when iguana or flamingo join the cluster, pin to koala explicitly:
+      #   nodeSelector:
+      #     kubernetes.io/hostname: koala
+      # The registry uses hostPath storage (/var/lib/registry on koala) and
+      # binds on the host's localhost; both are koala-specific.
+      hostNetwork: true
+      containers:
+        - name: registry
+          image: docker.io/library/registry:2
+          ports:
+            - containerPort: 5000
+              hostPort: 5000
+          env:
+            - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+              value: /var/lib/registry
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/registry
+      volumes:
+        - name: data
+          hostPath:
+            path: /var/lib/registry
+            type: DirectoryOrCreate

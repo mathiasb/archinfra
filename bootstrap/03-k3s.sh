@@ -8,6 +8,7 @@ source "${CONFIG_DIR}/config.sh"
 echo "--- k3s config ---"
 sudo mkdir -p /etc/rancher/k3s
 sudo cp "${INFRA_DIR}/scripts/k3s-config.yaml" /etc/rancher/k3s/config.yaml
+sudo cp "${INFRA_DIR}/scripts/k3s-registries.yaml" /etc/rancher/k3s/registries.yaml
 
 echo "--- k3s install ---"
 if ! command -v k3s &>/dev/null; then

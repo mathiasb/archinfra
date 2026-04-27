@@ -6,7 +6,9 @@ metadata:
   name: flux-system
   namespace: flux-system
 spec:
-  interval: 1m0s
+  # interval shortened from 1m0s to 10s — see docs/cd-pipeline.md.
+  # `flux bootstrap` will reset this if re-run; preserve manually.
+  interval: 10s
   ref:
     branch: main
   secretRef:

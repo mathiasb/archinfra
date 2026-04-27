@@ -73,6 +73,40 @@ git push
 # Flux reconciles within 60s — pod rolls back to previous image
 ```
 
+## Cobalt-dingo — local-registry variant
+
+`cobalt-dingo` uses a different CD flow because the build/push happens on
+the koala self-hosted Gitea Actions runner directly:
+
+```mermaid
+flowchart TD
+    A[App repo: cobalt-dingo<br/>git push main] -->|triggers| B[Gitea Actions ci.yml<br/>on koala self-hosted runner]
+    B --> C[buildah build]
+    C --> D[buildah push to<br/>localhost:5000/cobalt-dingo:&lt;sha&gt;]
+    D --> E[Smoke test via<br/>k3s ctr images pull]
+    E --> F[Clone infra repo<br/>yq update image tag in<br/>k3s/apps/cobalt-dingo/deployment.yaml<br/>git commit + push]
+    F --> G[Annotate Flux<br/>reconcile.fluxcd.io/requestedAt]
+    G --> H[Flux pulls + applies<br/>~5–10s end-to-end]
+```
+
+Differences from the supervisor pattern above:
+- Builder: **buildah** instead of buildctl
+- Registry: **localhost:5000** (in-cluster, see `docs/registries.md`) instead of `gitea.d-ma.be`
+- Smoke test: in-CI via `k3s ctr` before deploy
+- Deploy: still goes through infra-repo + Flux (since v0.2.0); Flux is
+  triggered immediately via `kubectl annotate` so reconcile starts in <1s
+
+### Flux reconcile intervals (tuned for fast deploys)
+
+| Resource | Default | Configured | Why |
+|---|---|---|---|
+| `GitRepository/flux-system` | 1m | **10s** | Polling Gitea cheaply for fast pickup |
+| `Kustomization/apps` | 10m | **30s** | Quick reconcile if annotate misses |
+| `Kustomization/flux-system` | 10m | 10m | Flux itself rarely changes |
+
+CI pipelines should still annotate Flux for immediate reconciliation rather
+than relying on the polling interval. See the `cobalt-dingo` workflow.
+
 ## SOPS + age
 
 Secrets are encrypted with age before committing. The age public key is in `.sops.yaml`. The private key is stored only in the `sops-age` k8s Secret in the `flux-system` namespace — it must be backed up externally (1Password).

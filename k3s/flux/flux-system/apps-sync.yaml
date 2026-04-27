@@ -4,7 +4,8 @@ metadata:
   name: apps
   namespace: flux-system
 spec:
-  interval: 1m
+  # interval shortened from 1m to 30s — see docs/cd-pipeline.md.
+  interval: 30s
   path: ./k3s/apps
   prune: true
   sourceRef:
