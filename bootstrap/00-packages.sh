@@ -15,7 +15,8 @@ PACKAGES=(
   # Filesystem
   btrfs-progs snapper snap-pac
   # Network
-  networkmanager openssh tailscale ufw fail2ban reflector
+  # NOTE: ufw is intentionally NOT installed — see docs/network.md.
+  networkmanager openssh tailscale fail2ban reflector
   # GPU
   nvidia-open nvidia-utils nvidia-container-toolkit cuda
   # k8s tooling

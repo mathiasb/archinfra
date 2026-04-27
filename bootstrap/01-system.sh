@@ -36,21 +36,9 @@ else
   echo "fail2ban already configured, skipping"
 fi
 
-echo "--- UFW ---"
-if ! sudo ufw status | grep -q "Status: active"; then
-  sudo ufw default deny incoming
-  sudo ufw default allow outgoing
-  sudo ufw allow ssh comment 'SSH access'
-  sudo ufw allow 80/tcp comment 'HTTP - public services via piguard/NPM'
-  sudo ufw allow 443/tcp comment 'HTTPS - public services via piguard/NPM'
-  sudo ufw allow in on tailscale0 to any port 6443 comment 'k3s API - Tailscale mesh only'
-  sudo ufw allow in on tailscale0 comment 'All traffic within Tailscale mesh'
-  sudo ufw allow from 10.42.0.0/16 comment 'k3s pod CIDR'
-  sudo ufw allow from 10.43.0.0/16 comment 'k3s service CIDR'
-  sudo ufw --force enable
-else
-  echo "UFW already active, skipping"
-fi
+# Host firewall: intentionally NOT configured — see docs/network.md for the
+# Apr 24 2026 incident. UFW broke kube-router on this host and must not be
+# reintroduced.
 
 echo "--- SSH hardening ---"
 if grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config 2>/dev/null || \
