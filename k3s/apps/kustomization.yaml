@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - imagepullsecret
   - registry
+  - gitea
   - infra-mcp
   - supervisor
   - cobalt-dingo

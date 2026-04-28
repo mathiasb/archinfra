@@ -1,7 +1,15 @@
 gitea:
   admin:
-    username: mathias
+    # Username + password come from the SOPS-encrypted Secret 'gitea-admin-secret'
+    # (see admin-secret.enc.yaml in this directory). Keep email here — the chart
+    # bakes it into the configure_gitea.sh init script at install time.
+    existingSecret: gitea-admin-secret
     email: mathias.bergqvist@gmail.com
+    # initialOnlyNoReset: only create the admin user if it doesn't already exist.
+    # Once created, password changes via the Gitea UI persist across pod restarts.
+    # Previously this was 'keepUpdated' (chart default), which silently reset the
+    # admin password back to the value in env on every pod restart.
+    passwordMode: initialOnlyNoReset
   config:
     server:
       DOMAIN: gitea.d-ma.be

@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# The Gitea Deployment + Postgres + Valkey + Ingress + TLS Secret are all
+# managed by the Gitea Helm chart, which is installed manually (not via a Flux
+# HelmRelease). Run `helm upgrade gitea -n gitea -f values.yaml ...` after
+# changing values.yaml. Helm will read existingSecret/passwordMode from the
+# values and reconfigure the pod.
+#
+# Flux owns these supplementary resources only:
+resources:
+  - admin-secret.enc.yaml
+  - gitea-http-nodeport.yaml
+  - gitea-ssh-nodeport.yaml
