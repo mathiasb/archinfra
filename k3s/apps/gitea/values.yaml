@@ -39,9 +39,14 @@ postgresql:
 
 ingress:
   enabled: true
-  ingressClassName: nginx
+  className: nginx
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "0"  # unlimited — needed for container image pushes
+    # Without this, ingress-nginx returns 308 HTTP→HTTPS to the upstream proxy
+    # chain and produces ERR_TOO_MANY_REDIRECTS in the browser (Apr 28 2026).
+    # The TLS termination layer in the WAN→ingress path is not yet verified —
+    # this disables the redirect regardless of where TLS terminates.
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
   hosts:
     - host: gitea.d-ma.be
       paths:
